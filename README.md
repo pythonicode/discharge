@@ -1,17 +1,34 @@
-# Discharge
-### Free, secure and unlimited data storage.
+# Tauri Svelte Template
 
-A submission to Chainlink Spring 2022 Hackthon, Discharge is a desktop application that brings the benefits of FileCoin straight to your desktop. After downloading setup  your credentials then choose a directory to begin backing up and securely uploading your data directly to IPFS. 
+- **Tauri**
+- **GitHub action** for cross-platform builds
+- **Svelte**
+- **Vite**
+- **TypeScript**
+- **`svelte-preprocess`** with Sass installed by default
+- **Hot module replacement**
+- **ESLint**
+- **Prettier**
 
+## Dev instructions
 
-### Installation
+### Get started
 
-A standalone application is in progress. For now here are the steps to run the app locally.
+1. Install Node.js
+2. Install Rust
+3. Follow the [Tauri setup guide](https://tauri.studio/en/docs/get-started/intro)
+4. Run `npm install`
+5. Find and replace the text `tauri-template` and `Tauri Template`.
 
-```bash
-git clone https://github.com/pythonicode/discharge.git discharge
-cd discharge
-yarn start
-```
+### Commands
+- `npm run dev`: Start app in dev mode
+- `npm run build`: Build
+- `npm run lint`: Lint
+- `npm run format`: Format
 
-This will start the app and you can enjoy free decentralized storage!
+### Release new version
+1. Update `CHANGELOG.md`
+2. Bump the version number in `src-tauri/Cargo.toml`
+3. Run `cargo check` to update `Cargo.lock`
+4. Create a git tag in the format `v#.#.#`
+5. Add release notes to the generated GitHub release and publish it

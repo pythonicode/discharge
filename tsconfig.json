@@ -1,18 +1,29 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "lib": [
-      "dom",
-      "es2015",
-      "es2016",
-      "es2017"
-    ],
-    "allowJs": true,
-    "jsx": "react-jsx",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    // require `import type` instead fo `import` for types
+    // svelte-preprocess apparently needs this
+    "importsNotUsedAsValues": "error",
+    "isolatedModules": true,
+
+    // To have svelte warnings/errors correct position
     "sourceMap": true,
-    "outDir": "./dist",
-    "strict": true ,
+
+    // Prevent type errors
+    "types": ["svelte"],
+
+    "strict": true,
     "esModuleInterop": true,
-  }
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.svelte"],
+  "extends": "@tsconfig/svelte/tsconfig.json"
 }
