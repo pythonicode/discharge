@@ -6,6 +6,11 @@
   import { Link } from 'svelte-navigator'
   import Copy from '@/components/core/Copy.svelte'
   import Tooltip from '@/components/core/Tooltip.svelte'
+  import { invoke } from '@tauri-apps/api/tauri'
+
+  invoke('get_preferences').then(preferences => {
+    console.log(preferences)
+  })
 
   let directory = 'C:\\Users\\AppData\\Roaming\\Discharge\\Something'
   let uid = '1ed28dcb-eaa7-4bbd-879d-e979bde8cd57'

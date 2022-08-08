@@ -4,6 +4,8 @@
 )]
 
 mod core;
+mod preferences;
+mod util;
 
 use tauri::api::shell;
 use tauri::{
@@ -15,7 +17,7 @@ fn main() {
   let ctx = tauri::generate_context!();
 
   tauri::Builder::default()
-    .invoke_handler(tauri::generate_handler![])
+    .invoke_handler(tauri::generate_handler![preferences::get_preferences])
     .setup(|_| {
       Ok(())
     })
