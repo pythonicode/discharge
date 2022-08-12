@@ -40,6 +40,7 @@
     "singleQuote": true
   },
   "dependencies": {
+    "svelte-asyncable": "^2.1.0",
     "svelte-material-icons": "^2.0.4",
     "svelte-navigator": "^3.1.6"
   }

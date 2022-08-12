@@ -1,74 +1,84 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
-use std::path::PathBuf;
 use std::sync::RwLock;
 
 use serde::{Deserialize, Serialize};
 
 use crate::util;
+use crate::estuary;
 
 #[tauri::command]
 pub fn get_preferences() -> Preferences {
   PREFERENCES.read().unwrap().data()
 }
 
+#[tauri::command]
+pub fn set_lang(lang: String, window: tauri::Window) -> Result<(), tauri::Error> {
+  PREFERENCES.write().unwrap().set_lang(lang);
+  window.emit("updated:preferences", &get_preferences())
+}
+
+#[tauri::command]
+pub fn set_path(path: String, window: tauri::Window) -> Result<(), tauri::Error> {
+  PREFERENCES.write().unwrap().set_path(path);
+  window.emit("updated:preferences", &get_preferences())
+}
+
+#[tauri::command]
+pub fn set_uid(uid: String, window: tauri::Window) -> Result<(), tauri::Error> {
+  PREFERENCES.write().unwrap().set_lang(uid);
+  window.emit("updated:preferences", &get_preferences())
+}
+
+#[tauri::command]
+pub fn set_password(password: String, window: tauri::Window) -> Result<(), tauri::Error> {
+  PREFERENCES.write().unwrap().set_password(password);
+  window.emit("updated:preferences", &get_preferences())
+  
+}
+
+#[tauri::command]
+pub fn remove_account(window: tauri::Window) -> Result<(), tauri::Error> {
+  PREFERENCES.write().unwrap().remove_account();
+  window.emit("updated:preferences", &get_preferences())
+}
+
 lazy_static::lazy_static! {
   pub static ref PREFERENCES: RwLock<Preferences> = RwLock::new(Preferences::default());
-}
-
-#[derive(Debug)]
-pub struct PreferencesError {
-  details: String,
-}
-
-impl PreferencesError {
-  pub fn new(details: String) -> Self {
-    PreferencesError { details }
-  }
-}
-
-impl Display for PreferencesError {
-  fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{}", self.details)
-  }
-}
-
-impl Error for PreferencesError {
-  fn description(&self) -> &str {
-    self.details.as_str()
-  }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Preferences {
   lang: String,
-  path: PathBuf,
+  path: String,
   uid: Option<String>,
-  key: Option<String>,
+  password: Option<String>,
 }
 
 impl Preferences {
   pub fn lang(&self) -> &str {
     &self.lang
   }
+
   pub fn path(&self) -> &str {
-    self.path.to_str().expect("failed to convert to string")
+    &self.path
   }
 
   pub fn uid(&self) -> Option<&str> {
     self.uid.as_ref().map(|s| s.as_str())
   }
 
-  pub fn key(&self) -> Option<&str> {
-    self.key.as_ref().map(|s| s.as_str())
+  pub fn password(&self) -> Option<&str> {
+    self.password.as_ref().map(|s| s.as_str())
   }
+
 
   pub fn data(&self) -> Self {
     Preferences {
       lang: self.lang.clone(),
       path: self.path.clone(),
       uid: self.uid.clone(),
-      key: self.key.clone(),
+      password: self.password.clone(),
     }
   }
 }
@@ -79,7 +89,7 @@ impl Preferences {
     self.store();
   }
 
-  pub fn set_path(&mut self, path: PathBuf) {
+  pub fn set_path(&mut self, path: String) {
     self.path = path;
     self.store();
   }
@@ -89,8 +99,14 @@ impl Preferences {
     self.store();
   }
 
-  pub fn set_key(&mut self, key: String) {
-    self.key = Some(key);
+  pub fn set_password(&mut self, password: String) {
+    self.password = Some(password);
+    self.store();
+  }
+
+  pub fn remove_account(&mut self) {
+    self.uid = None;
+    self.password = None;
     self.store();
   }
 }
@@ -111,7 +127,7 @@ impl Preferences {
   }
 
   fn build_conf_path() -> String {
-    let path = util::data_dir().join(PREFERENCE_FILE);
+    let path = util::app_config_dir().join(PREFERENCE_FILE);
     path.to_str().expect("error converting to string").to_string()
   }
 }
@@ -121,9 +137,9 @@ impl Default for Preferences {
     Preferences::load().unwrap_or_else(|_| {
       let setting = Preferences {
         lang: "default".to_string(),
-        path: util::default_dir(),
+        path: util::default_dir().to_str().unwrap().to_string(),
         uid: None,
-        key: None,
+        password: None,
       };
       setting.store();
       setting

@@ -3,17 +3,12 @@
   import ArrowLeft from 'svelte-material-icons/ArrowLeft.svelte'
   import Eye from 'svelte-material-icons/Eye.svelte'
   import EyeOff from 'svelte-material-icons/EyeOff.svelte'
-  import { Link } from 'svelte-navigator'
+  import { Link, navigate } from 'svelte-navigator'
+  import { onMount } from 'svelte'
   import Copy from '@/components/core/Copy.svelte'
   import Tooltip from '@/components/core/Tooltip.svelte'
-  import { invoke } from '@tauri-apps/api/tauri'
+  import { preferences, setFilePath, setPassword, generateUserId } from '@/lib/tauri'
 
-  invoke('get_preferences').then(preferences => {
-    console.log(preferences)
-  })
-
-  let directory = 'C:\\Users\\AppData\\Roaming\\Discharge\\Something'
-  let uid = '1ed28dcb-eaa7-4bbd-879d-e979bde8cd57'
   let password = ''
   let confirm = ''
   let visible = false
@@ -21,25 +16,27 @@
   let error = [false, false]
   let message = ''
 
+  onMount(() => {
+    generateUserId()
+  })
+
   const chooseDirectory = async () => {
     const selected = await open({
       directory: true,
     })
-    if (selected) directory = selected as string
+    if (selected) setFilePath(selected as string)
   }
 
   function scorePassword(pass: string) {
     var score = 0
     if (!pass) return score
 
-    // award every unique letter until 5 repetitions
     var letters = new Map()
     for (var i = 0; i < pass.length; i++) {
       letters.set(pass[i], (letters.get(pass[i]) || 0) + 1)
       score += 5.0 / letters.get(pass[i])
     }
 
-    // bonus points for mixing it up
     var variations: RegExp[] = [/\d/, /[a-z]/, /[A-Z]/, /\W/]
 
     let count = variations.reduce((count, variation) => {
@@ -65,6 +62,9 @@
       return
     }
     message = ''
+    error = [false, false]
+    setPassword(password)
+    navigate('/main')
   }
 </script>
 
@@ -79,18 +79,16 @@
     class="border border-gray-500 rounded px-4 py-2 duration-300 bg-gray-800 w-full overflow-hidden text-gray-400 hover:border-light transition-colors cursor-pointer select-none"
     on:click={chooseDirectory}
   >
-    {directory}
+    {$preferences?.path || 'Select a directory'}
   </div>
   <div class="text-sm text-gray-500">We recommend creating a new empty directory.</div>
   <h3 class="text-3xl font-bold">Secure your Wallet</h3>
   <div
     class="border border-gray-500 rounded px-4 py-2 duration-300 bg-gray-800 w-full overflow-hidden text-gray-400 flex items-center justify-between"
   >
-    <Tooltip content="This is an auto-generated ID and cannot be changed." position="top">
-      {uid}
-    </Tooltip>
+    {$preferences?.uid}
     <Tooltip content="Copy" position="top">
-      <Copy content={uid} />
+      <Copy content={$preferences?.uid} />
     </Tooltip>
   </div>
   <div class="relative w-full">
@@ -98,18 +96,21 @@
       <input
         type="text"
         bind:value={password}
-        class={`w-full rounded-none rounded-t ${error[0] ? 'border-red-500' : 'border-gray-500'}`}
+        class={`w-full ${error[0] ? 'border-red-500' : 'border-gray-500'}`}
         placeholder="Password"
         on:input={() => {
           error[0] = false
           message = ''
+        }}
+        on:change={(event) => {
+          setPassword(event?.currentTarget.value)
         }}
       />
     {:else}
       <input
         type="password"
         bind:value={password}
-        class={`w-full rounded-none rounded-t ${error[0] ? 'border-red-500' : 'border-gray-500'}`}
+        class={`w-full ${error[0] ? 'border-red-500' : 'border-gray-500'}`}
         placeholder="Password"
         on:input={() => {
           error[0] = false

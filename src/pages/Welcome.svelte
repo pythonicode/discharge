@@ -1,7 +1,4 @@
 <script>
-  import Tooltip from '@/components/core/Tooltip.svelte'
-  import { invoke } from '@tauri-apps/api/tauri';
-
   import Plus from 'svelte-material-icons/Plus.svelte'
   import Upload from 'svelte-material-icons/Upload.svelte'
   import { Link } from 'svelte-navigator'

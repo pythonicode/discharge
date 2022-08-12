@@ -4,9 +4,12 @@
 )]
 
 mod core;
-mod preferences;
 mod util;
+mod preferences;
+mod estuary;
 
+use estuary::ESTUARY;
+use lazy_static::__Deref;
 use tauri::api::shell;
 use tauri::{
   AboutMetadata, CustomMenuItem, Manager, Menu, MenuEntry, MenuItem, Submenu, WindowBuilder,
@@ -17,9 +20,9 @@ fn main() {
   let ctx = tauri::generate_context!();
 
   tauri::Builder::default()
-    .invoke_handler(tauri::generate_handler![preferences::get_preferences])
+    .invoke_handler(tauri::generate_handler![preferences::get_preferences, preferences::set_lang, preferences::set_path, preferences::set_uid, preferences::set_password, preferences::remove_account, estuary::generate_uid])  
     .setup(|_| {
-      Ok(())
+      tauri::async_runtime::block_on(ESTUARY.write().unwrap().update())
     })
     .menu(
     Menu::with_items([

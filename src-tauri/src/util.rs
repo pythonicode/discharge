@@ -4,11 +4,11 @@ use tauri::{api::path};
 const APP_NAME: &str = "discharge";
 
 pub fn default_dir() -> PathBuf {
-    let path = data_dir();
-    path.join("files")
+    let path = path::document_dir().expect("could not get config dir");
+    path.join("Discharge")
 }
 
-pub fn data_dir() -> PathBuf {
+pub fn app_config_dir() -> PathBuf {
     let path = path::config_dir().expect("could not get config dir");
     path.join(APP_NAME)
 }

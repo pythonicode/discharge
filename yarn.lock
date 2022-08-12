@@ -1494,6 +1494,11 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
+svelte-asyncable@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-asyncable/-/svelte-asyncable-2.1.0.tgz#cac4d2209135519bc65a4722a0ace89ed568ea2f"
+  integrity sha512-x9ysuou0dzmwZ4g5bVLL2FmSy/+pugbbm80FmjOvg8mINkA2RENZPF3QKhVdrMKXM9T/PI3oub/J9TsX9lSZMg==
+
 svelte-check@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/svelte-check/-/svelte-check-2.8.0.tgz#cfe1354e72545839c47f0f022c2c007454cd4095"
