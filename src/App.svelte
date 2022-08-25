@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Router, Route, navigate } from 'svelte-navigator'
+  import { Router, Route, navigate, useLocation } from 'svelte-navigator'
   import Start from './pages/Start.svelte'
   import Welcome from './pages/Welcome.svelte'
   import Main from './pages/Main.svelte'
@@ -7,13 +7,13 @@
   import { connected } from './lib/tauri'
 
   connected.subscribe((curr) => {
-    curr ? navigate('main') : navigate('welcome')
+    curr ? navigate('/main') : navigate('/welcome')
   })
 </script>
 
-<Router>
-  <Route path=""><Loading /></Route>
-  <Route path="welcome"><Welcome /></Route>
-  <Route path="start"><Start /></Route>
-  <Route path="main"><Main /></Route>
+<Router primary={false}>
+  <Route path="/"><Loading /></Route>
+  <Route path="/welcome"><Welcome /></Route>
+  <Route path="/start"><Start /></Route>
+  <Route path="/main"><Main /></Route>
 </Router>

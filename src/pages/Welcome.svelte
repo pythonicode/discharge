@@ -6,7 +6,7 @@
 
 <div class="flex flex-col items-center justify-center gap-4 h-full">
   <h1 class="font-bold text-5xl mb-8 select-none">Discharge</h1>
-  <Link to="start" class="w-4/5">
+  <Link to="/start" class="w-4/5">
     <button class="w-full"><Plus size="1.5em" /> Create a New Wallet</button>
   </Link>
   <div class="flex flex-row items-center justify-center w-full gap-4">

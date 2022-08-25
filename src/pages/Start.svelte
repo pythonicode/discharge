@@ -8,6 +8,7 @@
   import Copy from '@/components/core/Copy.svelte'
   import Tooltip from '@/components/core/Tooltip.svelte'
   import { preferences, setFilePath, setPassword, generateUserId } from '@/lib/tauri'
+  import Loader from '@/components/core/Loader.svelte'
 
   let password = ''
   let confirm = ''
@@ -70,7 +71,7 @@
 
 <div class="flex flex-col items-center gap-4 h-full ">
   <div class="flex w-full">
-    <Link to="/">
+    <Link to="/welcome">
       <ArrowLeft size="1.5em" />
     </Link>
   </div>
@@ -86,7 +87,11 @@
   <div
     class="border border-gray-500 rounded px-4 py-2 duration-300 bg-gray-800 w-full overflow-hidden text-gray-400 flex items-center justify-between"
   >
-    {$preferences?.uid}
+    {#if $preferences?.uid}
+      {$preferences?.uid}
+    {:else}
+      <Loader />
+    {/if}
     <Tooltip content="Copy" position="top">
       <Copy content={$preferences?.uid} />
     </Tooltip>
@@ -142,9 +147,27 @@
     </div>
   </div>
   {#if visible}
-    <input type="text" bind:value={confirm} class="w-full" placeholder="Confirm Password" />
+    <input
+      type="text"
+      bind:value={confirm}
+      class={`w-full ${error[1] ? 'border-red-500' : 'border-gray-500'}`}
+      placeholder="Confirm Password"
+      on:input={() => {
+        error[0] = false
+        message = ''
+      }}
+    />
   {:else}
-    <input type="password" bind:value={confirm} class="w-full" placeholder="Confirm Password" />
+    <input
+      type="password"
+      bind:value={confirm}
+      class={`w-full ${error[1] ? 'border-red-500' : 'border-gray-500'}`}
+      placeholder="Confirm Password"
+      on:input={() => {
+        error[0] = false
+        message = ''
+      }}
+    />
   {/if}
   <div class="text-sm text-red-500 whitespace-nowrap overflow-hidden -my-2">
     {message}

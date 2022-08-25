@@ -5,7 +5,6 @@
 
   import { preferences, setFilePath, removeAccount, setLanguage } from '@/lib/tauri'
   import { open } from '@tauri-apps/api/dialog'
-  import { navigate } from 'svelte-navigator'
 
   const chooseDirectory = async () => {
     const selected = await open({
@@ -24,7 +23,6 @@
   }
 
   let confirm = false
-  let progress = 0
   let timeout: number | undefined = undefined
 
   const removeWallet = () => {
@@ -37,7 +35,6 @@
 
   const cancel = () => {
     confirm = false
-    progress = 0
     clearTimeout(timeout)
   }
 </script>
@@ -74,7 +71,7 @@
     class="light red active:scale-95 transition-transform duration-300"
   >
     {#if !confirm}
-      Remove Wallet
+      Reset Wallet
     {:else}
       Hold to Confirm
     {/if}
